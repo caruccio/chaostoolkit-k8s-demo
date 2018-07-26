@@ -1,0 +1,120 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  name: backend-astre
+spec:
+  ports:
+  - port: 8444
+    protocol: TCP
+    targetPort: 8444
+  selector:
+    run: backend-astre
+status:
+  loadBalancer: {}
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    run: backend-astre
+  name: backend-astre
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      run: backend-astre
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        run: backend-astre
+    spec:
+      containers:
+      - command:
+        - python3.5
+        - astre.py
+        env:
+        - name: SSL_KEY
+          value: /certs/backend-astre-valid.key
+        - name: SSL_CRT
+          value: /certs/backend-astre-valid.crt
+        image: getupcloud/city-sunset:latest
+        imagePullPolicy: Always
+        name: backend-astre
+        ports:
+        - containerPort: 8444
+        resources: {}
+        volumeMounts:
+        - name: certs
+          mountPath: /certs
+      volumes:
+      - configMap:
+          name: certs
+        name: certs
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  name: frontend-sunset
+spec:
+  ports:
+  - port: 8443
+    protocol: TCP
+    targetPort: 8443
+  selector:
+    run: frontend-sunset
+status:
+  loadBalancer: {}
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    run: frontend-sunset
+  name: frontend-sunset
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      run: frontend-sunset
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        run: frontend-sunset
+    spec:
+      containers:
+      - command:
+        - python3.5
+        - sunset.py
+        env:
+        - name: SSL_KEY
+          value: /certs/frontend-sunset.key
+        - name: SSL_CRT
+          value: /certs/frontend-sunset.crt
+        - name: ASTRE_SERVICE
+          value: backend-astre.chaosdemo.svc
+        - name: ASTRE_SSL_CRT
+          value: /certs/ca-bundle-backend-astre-valid.crt
+        image: getupcloud/city-sunset:latest
+        imagePullPolicy: Always
+        name: frontend-sunset
+        ports:
+        - containerPort: 8443
+        resources: {}
+        volumeMounts:
+        - name: certs
+          mountPath: /certs
+      volumes:
+      - configMap:
+          name: certs
+        name: certs
+status: {}
