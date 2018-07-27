@@ -2,36 +2,32 @@
 apiVersion: v1
 kind: Service
 metadata:
-  creationTimestamp: null
   name: backend-astre
+  labels:
+    name: backend-astre
 spec:
   ports:
   - port: 8444
     protocol: TCP
     targetPort: 8444
   selector:
-    run: backend-astre
-status:
-  loadBalancer: {}
+    name: backend-astre
 ---
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  creationTimestamp: null
-  labels:
-    run: backend-astre
   name: backend-astre
+  labels:
+    name: backend-astre
 spec:
   replicas: 1
   selector:
     matchLabels:
-      run: backend-astre
-  strategy: {}
+      name: backend-astre
   template:
     metadata:
-      creationTimestamp: null
       labels:
-        run: backend-astre
+        name: backend-astre
     spec:
       containers:
       - command:
@@ -55,41 +51,36 @@ spec:
       - configMap:
           name: certs
         name: certs
-status: {}
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  creationTimestamp: null
   name: frontend-sunset
+  labels:
+    name: frontend-sunset
 spec:
   ports:
   - port: 8443
     protocol: TCP
     targetPort: 8443
   selector:
-    run: frontend-sunset
-status:
-  loadBalancer: {}
+    name: frontend-sunset
 ---
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  creationTimestamp: null
-  labels:
-    run: frontend-sunset
   name: frontend-sunset
+  labels:
+    name: frontend-sunset
 spec:
   replicas: 1
   selector:
     matchLabels:
-      run: frontend-sunset
-  strategy: {}
+      name: frontend-sunset
   template:
     metadata:
-      creationTimestamp: null
       labels:
-        run: frontend-sunset
+        name: frontend-sunset
     spec:
       containers:
       - command:
@@ -117,4 +108,3 @@ spec:
       - configMap:
           name: certs
         name: certs
-status: {}
