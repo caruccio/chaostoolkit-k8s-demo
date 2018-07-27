@@ -23,8 +23,8 @@ chaostoolkit-documentation-code:
 	git clone https://github.com/caruccio/chaostoolkit-documentation-code.git
 
 images: chaostoolkit-documentation-code
-	docker build --no-cache . -t $(IMAGE_REPO)/city-sunset:latest -f Dockerfile.app
-	docker build --no-cache . -t $(IMAGE_REPO)/chaos:latest -f Dockerfile
+	docker build . -t $(IMAGE_REPO)/city-sunset:latest -f Dockerfile.app
+	docker build . -t $(IMAGE_REPO)/chaos:latest -f Dockerfile
 
 push:
 	docker push $(IMAGE_REPO)/city-sunset:latest
@@ -33,7 +33,7 @@ push:
 chaos:
 	docker run -it --rm \
 	    -v $$HOME/.kube:/root/.kube \
-	    -v $(PWD)/experiments:/experiments \
+	    -v $$PWD/experiments:/experiments \
 	    getupcloud/chaos:latest chaos run /experiments/k8s.json
 
 deploy: certs.yaml
