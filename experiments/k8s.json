@@ -13,8 +13,7 @@
                 "provider": {
                     "arguments": {
                       "name": "frontend-sunset",
-                      "ns": "chaosdemo",
-                      "label_selector": "run in ({name})"
+                      "ns": "chaosdemo"
                     },
                     "type": "python",
                     "module": "chaosk8s.probes",
