@@ -35,6 +35,7 @@ push:
 	cp -f ~/.kube/config .kube/config
 
 chaos: .kube/config
+	chcon -R -t svirt_sandbox_file_t .kube experiments || true
 	docker run -it --rm \
 	    -v $$PWD/.kube:/root/.kube \
 	    -v $$PWD/experiments:/experiments \
