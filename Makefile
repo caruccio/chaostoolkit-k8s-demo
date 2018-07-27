@@ -28,11 +28,15 @@ images: chaostoolkit-documentation-code
 
 push:
 	docker push $(IMAGE_REPO)/city-sunset:latest
-	#docker push $(IMAGE_REPO)/chaos:latest
+	docker push $(IMAGE_REPO)/chaos:latest
 
-chaos:
+.kube/config:
+	mkdir -p .kube
+	cp -f ~/.kube/config .kube/config
+
+chaos: .kube/config
 	docker run -it --rm \
-	    -v $$HOME/.kube:/root/.kube \
+	    -v $$PWD/.kube:/root/.kube \
 	    -v $$PWD/experiments:/experiments \
 	    getupcloud/chaos:latest chaos run /experiments/k8s.json
 
