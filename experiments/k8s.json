@@ -1,0 +1,61 @@
+{
+    "version": "1.0.0",
+    "title": "What is the impact of an expired certificate on our application chain?",
+    "description": "If a certificate expires, we should gracefully deal with the issue.",
+    "tags": ["tls"],
+    "steady-state-hypothesis": {
+        "title": "Application responds",
+        "probes": [
+            {
+                "type": "probe",
+                "name": "the-sunset-service-must-be-running",
+                "tolerance": true,
+                "provider": {
+                    "arguments": {
+                      "name": "frontend-sunset",
+                      "ns": "chaosdemo",
+                      "label_selector": "run in ({name})"
+                    },
+                    "type": "python",
+                    "module": "chaosk8s.probes",
+                    "func": "microservice_available_and_healthy"
+                }
+            }
+        ]
+    },
+    "method": [
+        {
+            "name": "scale-up-microservice",
+            "type": "action",
+            "provider": {
+                "arguments": {
+                    "replicas": 2,
+                    "name": "frontend-sunset",
+                    "ns": "chaosdemo"
+                },
+                "type": "python",
+                "module": "chaosk8s.actions",
+                "func": "scale_microservice"
+            },
+            "pauses": {
+                "after": 8
+            }
+        }
+    ],
+    "rollbacks": [
+        {
+          "name": "scale-down-microservice",
+          "type": "action",
+          "provider": {
+            "arguments": {
+              "replicas": 1,
+              "name": "frontend-sunset",
+              "ns": "chaosdemo"
+            },
+            "type": "python",
+            "module": "chaosk8s.actions",
+            "func": "scale_microservice"
+          }
+        }
+    ]
+}
