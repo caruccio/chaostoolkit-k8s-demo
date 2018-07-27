@@ -1,5 +1,3 @@
 *.log
 *.swp
-certs/
-certs.yaml
 chaostoolkit-documentation-code
