@@ -16,5 +16,5 @@ RUN python3.5 -m pip install -U pip && \
     chaos discover chaostoolkit-kubernetes && \
     chmod 777 -R /chaostk
 
-#ADD entrypoint .
-#ENTRYPOINT ["/entrypoint"]
+# Backward compat to k8s 1.9
+RUN sed -i s/client.AppsV1beta1Api/client.ExtensionsV1beta1Api/ /usr/lib/python3.5/site-packages/chaosk8s/{actions,probes}.py
