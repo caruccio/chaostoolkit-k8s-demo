@@ -31,7 +31,7 @@ push:
 	#docker push $(IMAGE_REPO)/chaos:latest
 
 chaos:
-	docker run -it --rm -v $(PWD)/experiments:/experiments chaos:latest chaos run /experiments/demo.json
+	docker run -it --rm -v $$HOME/.kube:/root/.kube -v $(PWD)/experiments:/experiments chaos:latest chaos run /experiments/k8s.json
 
 deploy: certs.yaml
 	kubectl -n $(NAMESPACE) create -f certs.yaml
